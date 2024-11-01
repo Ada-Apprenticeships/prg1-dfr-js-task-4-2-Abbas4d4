@@ -17,7 +17,6 @@ function dataDimensions(dataframe) {
   if (!Array.isArray(dataframe)) {
     return [-1, -1]; // If input isnt an array, return [-1, -1] indicating no valid data
   }
-
   const rowCount = dataframe.length;
 
   // Handle cases where the data is a 1D array or empty
@@ -26,33 +25,33 @@ function dataDimensions(dataframe) {
   }
 
   const columnCount = dataframe[0].length;
-  return [rowCount, columnCount];
+  return [rowCount, columnCount]; 
 
 }
 
 
 function findTotal(dataset) {
-  // Validate input: ensure it's a 1D array of numbers or numeric strings
+  // Validate input: ensure it's a 1D array of numbers or numeric strings. returns 0 if invalid
   if (!Array.isArray(dataset) || dataset.some(Array.isArray)) {
     return 0;
   }
 
   let total = 0; //holds total sum
 
-  for (const item of dataset) {
+  for (const item of dataset) { //Loops through each item in the dataset
     const num = Number(item); //converts item to number
 
     // Only add if `num` is a finite number
     if (isFinite(num)) {
-      total += num;
+      total += num; //adds the number to current value held in 'total' variable
     }
   }
-  return total;
+  return total; //returns final total
 }
 
 
 function calculateMean(dataset) {
-  // Validate and handle empty or invalid dataset
+  // Validate and handle empty or invalid dataset. returns 0 for invalid input
   if (Array.isArray(dataset[0]) && dataset.length === 1|| dataset.length === 0) { 
     return 0;
   }
@@ -63,11 +62,16 @@ function calculateMean(dataset) {
   // Flatten the dataset to handle both 1D and 2D arrays consistently
   const flattenedData = dataset.flat();
 
-  // Process each element in the flattened dataset
+
+  // Loops through each element in the flattened dataset
   flattenedData.forEach(element => {
+    // Parse the element as a floating-point number
     const value = parseFloat(element);
-    if (isFinite(value)) {  // Check if it's a valid number
+    // Check if the parsed value is a finite number (not NaN or Infinity)
+    if (isFinite(value)) {  
+      // If valid, add the value to the total sales sum
       totalSales += value;
+      // Increment the count of valid numeric entries
       count++;
     }
   });
@@ -78,7 +82,7 @@ function calculateMean(dataset) {
 
 
   function calculateMedian(dataset) {
-     // Filter out invalid data types:
+     // Filter out invalid data types: ensuring valid number is inputed
      const validNumbers = dataset.filter(value => {
        return typeof value === 'number' || (typeof value === 'string' && !isNaN(Number(value)));
      });
@@ -114,7 +118,7 @@ function convertToNumber(dataframe, col) {
       for (let i = 1; i < dataframe.length; i++) {
         const value = dataframe[i][col];
     
-        // Check if the value is a string and can be converted to a number
+        // Check if the value is a string and can be converted to a number. if so conversion count is incremented
         if (typeof value === 'string' && !isNaN(Number(value))) {
           dataframe[i][col] = Number(value); // Update the dataset in place
           conversionCount++;
@@ -150,7 +154,7 @@ function loadCSV(filepath, ignoreRows = [], ignoreCols = []) {
       const totalRows = lines.length;
       const totalColumns = lines[0]?.length || 0;
 
-      // Filter out ignored rows and columns
+      // Filter out ignored rows and columns and store cleaned dataset in filtered data
       const filteredData = lines
           .filter((_, index) => !ignoreRows.includes(index))
           .map(row => row.filter((_, colIndex) => !ignoreCols.includes(colIndex)));
@@ -195,7 +199,7 @@ function createSlice(dataframe, columnIndex, pattern, exportColumns = []) {
           return validColumnsToExport.map(colIndex => row[colIndex]);
       });
 
-  return result;
+  return result;  //returns sliced data
 }
 
 
